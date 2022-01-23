@@ -1,0 +1,25 @@
+pipeline {
+agent any
+stages {
+stage('Build') {
+steps {
+script {
+image = docker.build("sixeyed/pi:psod-pipelines",
+"--pull -f m4/Dockerfile m4")
+}
+}}
+stage('smoke test')
+{
+steps{
+script{
+container = image.run()
+container.stop()
+}
+}}
+stage('push')
+{
+steps{
+script{
+withDockerRegistry([credentialsId: "vvmanoj212", url: ""]){
+image.push()}
+}}}}}}
